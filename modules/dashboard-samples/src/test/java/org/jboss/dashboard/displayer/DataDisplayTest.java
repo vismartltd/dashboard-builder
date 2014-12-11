@@ -52,6 +52,8 @@ public class DataDisplayTest {
         return ShrinkWrap.create(JavaArchive.class)
                 .addPackage("org.jboss.dashboard.commons.message")
                 .addPackage("org.jboss.dashboard")
+                .addPackage("org.jboss.dashboard.factory")
+                .addPackage("org.jboss.dashboard.cluster")
                 .addPackage("org.jboss.dashboard.security")
                 .addPackage("org.jboss.dashboard.users")
                 .addPackage("org.jboss.dashboard.database")

@@ -35,6 +35,8 @@ public class OFC2RendererTest {
         return ShrinkWrap.create(JavaArchive.class)
                 .addPackage(OFC2RendererTest.class.getPackage())
                 .addPackage("org.jboss.dashboard")
+                .addPackage("org.jboss.dashboard.factory")
+                .addPackage("org.jboss.dashboard.cluster")
                 .addPackage("org.jboss.dashboard.security")
                 .addPackage("org.jboss.dashboard.users")
                 .addPackage("org.jboss.dashboard.database")

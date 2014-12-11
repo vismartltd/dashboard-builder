@@ -47,14 +47,14 @@ public class ShowcaseBundleExtractor {
         // Process the Showcase KPIs file
         XmlToBundleConverter converter = (XmlToBundleConverter) CDIBeanLocator.getBeanByType(KpisFileConverter.class);
         converter.bundleDir = new File(rootDir, "src/main/resources/org/jboss/dashboard/showcase/kpis");
-        converter.xmlFile = new File(rootDir, "src/main/webapp/WEB-INF/etc/appdata/initialData/showcaseKPIs.xml");
+        converter.xmlFile = new File(rootDir, "src/main/webapp/WEB-INF/deployments/showcaseKPIs.kpis");
         Map<Locale,Properties> bundles = converter.extract(); // Extract bundles from source XML
         converter.write(bundles); // Write literals to bundle files.
 
         // Process the Showcase Workspace file
         converter = (XmlToBundleConverter) CDIBeanLocator.getBeanByType(WorkspaceFileConverter.class);
         converter.bundleDir = new File(rootDir, "src/main/resources/org/jboss/dashboard/showcase/workspace");
-        converter.xmlFile = new File(rootDir, "src/main/webapp/WEB-INF/etc/appdata/initialData/showcaseWorkspace.xml");
+        converter.xmlFile = new File(rootDir, "src/main/webapp/WEB-INF/deployments/showcaseWorkspace.workspace");
         bundles = converter.extract(); // Extract bundles from source XML
         converter.write(bundles); // Write literals to bundle files.
     }

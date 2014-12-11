@@ -64,6 +64,7 @@ public class ExportHandler extends UIComponentHandlerFactoryElement {
 
     public static final String PARAM_WORKSPACE_ID = "workspaceId";
     public static final String PARAM_SECTION_ID = "sectionId";
+    public static final String KPIS_EXTENSION = "kpis";
 
     protected String componentIncludeJSP;
     protected String kpiImportResultJSP;
@@ -286,7 +287,8 @@ public class ExportHandler extends UIComponentHandlerFactoryElement {
         // Send XML bytes as a stream response.
         int id = xml.hashCode();
         if (id < 0) id = id*-1;
-        return new SendStreamResponse(new ByteArrayInputStream(xml.getBytes()), "inline;filename=kpiExport_" + id + ".kpiex");
+        
+        return new SendStreamResponse(new ByteArrayInputStream(xml.getBytes()), new StringBuilder("inline;filename=kpiExport_").append(id).append(".").append(KPIS_EXTENSION).toString());
     }
 
     public CommandResponse actionImportKPIs(CommandRequest request) {
@@ -301,7 +303,7 @@ public class ExportHandler extends UIComponentHandlerFactoryElement {
                 ImportResults importResults = importMgr.parse(new FileInputStream(file));
 
                 // Save the imported results.
-                importMgr.update(importResults);
+                importMgr.save(importResults);
 
                 // Show import messages.
                 MessageList messages = importResults.getMessages();
