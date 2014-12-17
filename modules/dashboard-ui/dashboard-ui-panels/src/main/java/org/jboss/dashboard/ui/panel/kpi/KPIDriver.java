@@ -17,9 +17,9 @@ package org.jboss.dashboard.ui.panel.kpi;
 
 import org.apache.commons.lang.StringUtils;
 import org.jboss.dashboard.DataDisplayerServices;
+import org.jboss.dashboard.dataset.DataSet;
 import org.jboss.dashboard.displayer.DataDisplayerType;
 import org.jboss.dashboard.displayer.chart.BarChartDisplayerType;
-import org.jboss.dashboard.kpi.KPIManager;
 import org.jboss.dashboard.ui.Dashboard;
 import org.jboss.dashboard.ui.UIBeanLocator;
 import org.jboss.dashboard.ui.UIServices;
@@ -222,10 +222,13 @@ public class KPIDriver extends PanelDriver implements DashboardDriver {
 
     // DashboardDriver interface
 
-    public Set<DataProvider> getDataProvidersUsed(Panel panel) throws Exception {
-        Set<DataProvider> results = new HashSet<DataProvider>();
+    public Set<String> getPropertiesReferenced(Panel panel) throws Exception {
+        Set<String> results = new HashSet<String>();
         KPI kpi = getKPI(panel);
-        if (kpi != null) results.add(kpi.getDataProvider());
+        if (kpi != null) {
+            DataSet ds = kpi.getDataProvider().getDataSet();
+            results.addAll(ds.getPropertiesReferenced());
+        }
         return results;
     }
 }

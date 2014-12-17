@@ -15,6 +15,7 @@
  */
 package org.jboss.dashboard.ui.panel.dashboard;
 
+import org.jboss.dashboard.provider.DataProperty;
 import org.jboss.dashboard.ui.Dashboard;
 import org.jboss.dashboard.ui.DashboardFilter;
 import org.jboss.dashboard.ui.components.DashboardFilterProperty;
@@ -120,13 +121,29 @@ public class DashboardFilterDriver extends PanelDriver implements DashboardDrive
 
     // DashboardDriver interface
 
-    public Set<DataProvider> getDataProvidersUsed(Panel panel) throws Exception {
-        Set<DataProvider> results = new HashSet<DataProvider>();
+    public Set<String> getPropertiesReferenced(Panel panel) throws Exception {
+        Set<String> results = new HashSet<String>();
         Dashboard dashboard = DashboardHandler.lookup().getCurrentDashboard();
         DashboardFilterHandler handler = dashboard.getDashboardFilter().getHandler(panel);
+        if (handler == null) return results;
+
         for (DashboardFilterProperty filterProperty : handler.getVisibleProperties()) {
-            DataProvider dataProvider = filterProperty.getDataProperty().getDataSet().getDataProvider();
-            results.add(dataProvider);
+            DataProperty property = filterProperty.getDataProperty();
+            if (property != null) {
+                results.add(property.getPropertyId());
+            } else {
+                log.info("Filter property '" + filterProperty.getPropertyId() + "' is no longer available in data provider. Removing from filter.");
+
+                // If the filtered property is no longer available in the data provider, remove it from being filtered properties.
+                DashboardFilterHandler filterHandler = getDashboardFilterHandler(panel);
+                DashboardFilterProperty[] filteredProperties = filterHandler.getBeingFilteredProperties();
+                for (int i = 0; i < filteredProperties.length; i++) {
+                    DashboardFilterProperty dashboardFilterProperty = filteredProperties[i];
+                    if (dashboardFilterProperty.getPropertyId().equals(filterProperty.getPropertyId())) {
+                        filterHandler.getFilter().removeProperty(filterProperty.getPropertyId());
+                    }
+                }
+            }
         }
         return results;
     }

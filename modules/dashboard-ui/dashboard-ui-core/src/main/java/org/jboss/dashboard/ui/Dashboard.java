@@ -263,8 +263,6 @@ public class Dashboard {
             if (dashboardFilter.getPropertyIds().length > 0) {
                 filter();
             }
-            // Refresh all the dashboard panels.
-            refreshPanels(null);
         } catch (Exception e) {
             throw new RuntimeException("Filter error after refresh the dashboard.", e);
         }
@@ -444,10 +442,10 @@ public class Dashboard {
     }
 
     /**
-     * Refresh those dashboard panels that are handling any of the properties specified.
+     * Refresh those dashboard panels that are related with any of the properties specified.
      * @param propertySet If null then refresh all the dashboard panels.
      */
-    protected void refreshPanels(String[] propertySet) throws Exception {
+    public void refreshPanels(String[] propertySet) throws Exception {
         AjaxRefreshManager ajaxMgr = AjaxRefreshManager.lookup();
         List panelIdsToRefresh = ajaxMgr.getPanelIdsToRefresh();
         panelIdsToRefresh.clear();
@@ -468,17 +466,18 @@ public class Dashboard {
             if (currentPanel != null && currentPanel.getPanelId().equals(panelId)) {
                 continue;
             }
+            // Don't refresh panels that are not displaying any dashboard data.
+            Set<String> propRefs = ((DashboardDriver) driver).getPropertiesReferenced(panel);
+            if (propRefs.isEmpty()) {
+                continue;
+            }
             // Mark panel as refreshable.
             if (propertySet == null) {
                 panelIdsToRefresh.add(panelId);
             } else {
-                Set<DataProvider> providersUsed = ((DashboardDriver) driver).getDataProvidersUsed(panel);
-                for (int i = 0; i < propertySet.length; i++) {
-                    String propertyId = propertySet[i];
-                    for (DataProvider dataProvider : providersUsed) {
-                        if (!panelIdsToRefresh.contains(panelId) && dataProvider.getDataSet().getPropertyById(propertyId) != null) {
-                            panelIdsToRefresh.add(panelId);
-                        }
+                for (String propertyId : propertySet) {
+                    if (!panelIdsToRefresh.contains(panelId) && propRefs.contains(propertyId)) {
+                        panelIdsToRefresh.add(panelId);
                     }
                 }
             }

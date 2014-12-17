@@ -583,6 +583,7 @@ public class DashboardFilterHandler extends UIComponentHandlerFactoryElement {
             }
         }
         getDashboard().refresh();
+        getDashboard().refreshPanels(null);
     }
 
     public CommandResponse actionClear(CommandRequest request) throws Exception {

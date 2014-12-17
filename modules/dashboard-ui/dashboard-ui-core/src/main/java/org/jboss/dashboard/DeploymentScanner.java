@@ -28,6 +28,7 @@ import org.jboss.dashboard.ui.components.export.ExportHandler;
 import org.jboss.dashboard.workspace.export.ExportManager;
 import org.jboss.dashboard.workspace.export.ImportWorkspacesModule;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -55,8 +56,8 @@ public class DeploymentScanner implements Startable {
     protected static final String INITIAL_MODULES_NAMESPACE_DATASOURCE = "org.jboss.dashboard.deployments.datasource.";
     protected static final int VERSION = 1;
 
-    @Inject
-    protected transient Logger log;
+    /** The logger */
+    protected static transient Logger log = LoggerFactory.getLogger(DeploymentScanner.class.getName());
     
     @Inject @Config("WEB-INF/deployments")
     protected String deploymentFolder;
