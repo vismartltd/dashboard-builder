@@ -48,7 +48,7 @@ public class LocaleManager {
     /**
      * The default localeId.
      */
-    @Inject @Config("ru")
+    @Inject @Config("en")
     protected String defaultLocaleId;
 
     private transient Locale[] availableLocales;
